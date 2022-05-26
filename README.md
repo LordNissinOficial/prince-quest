@@ -5,7 +5,6 @@ meu objetivo para esse jogo e um rpg com varios sistemas
 que interagem entre si.
 
 # sistemas que eu planejo adicionar sao:
-* magia
 * alquimia
 * skills
 * classes
