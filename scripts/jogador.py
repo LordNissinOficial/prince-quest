@@ -1,5 +1,6 @@
 import pygame as pg
 import socket, pickle
+from scripts.uiComponentes import Botao
 #from camera import Camera
 from scripts.config import *
 
@@ -7,16 +8,29 @@ pg.init()
 
 #pg.display.set_mode((1, 1))
 class Jogador():#pg.sprite.Sprite):
-	def __init__(self, x, y):
+	def __init__(self, x, y, jogo):
 		#self.camera = Camera()
-		self.pos = pg.math.Vector2(x*16, 2*16)
-		self.posMovendo = pg.math.Vector2(x*16, y*16)
+		self.pos = pg.math.Vector2(x*8, y*8)
+		self.posMovendo = pg.math.Vector2(x*8, y*8)
 		self.img = pg.image.load("recursos/sprites/jogador.png").convert()
 		self.img.set_colorkey((0, 0, 0))
-		self.botaoCima = Botao(24, DISPLAY_TAMANHO[1]-55, "mover_cima")
-		self.botaoBaixo = Botao(24, DISPLAY_TAMANHO[1]-21, "mover_baixo")
-		self.botaoEsquerda = Botao(7, DISPLAY_TAMANHO[1]-38, "mover_esquerda")
-		self.botaoDireita = Botao(41, DISPLAY_TAMANHO[1]-38, "mover_direita")
+		
+		self.botaoCima = Botao(16, DISPLAY_TAMANHO_REAL[1]-56)
+		self.botaoCima.imgNormal = jogo.uiSpriteSheet.load(4, 0, 2, 2)
+		self.botaoCima.imgPressionando = jogo.uiSpriteSheet.load(4, 2, 2, 2)
+		
+		self.botaoBaixo = Botao(16, DISPLAY_TAMANHO_REAL[1]-24)
+		self.botaoBaixo.imgNormal = jogo.uiSpriteSheet.load(6, 0, 2, 2)
+		self.botaoBaixo.imgPressionando = jogo.uiSpriteSheet.load(6, 2, 2, 2)
+		
+		self.botaoEsquerda = Botao(0, DISPLAY_TAMANHO_REAL[1]-40)
+		self.botaoEsquerda.imgNormal = jogo.uiSpriteSheet.load(0, 0, 2, 2)
+		self.botaoEsquerda.imgPressionando = jogo.uiSpriteSheet.load(0, 2, 2, 2)
+		
+		self.botaoDireita = Botao(32, DISPLAY_TAMANHO_REAL[1]-40)
+		self.botaoDireita.imgNormal = jogo.uiSpriteSheet.load(2, 0, 2, 2)
+		self.botaoDireita.imgPressionando = jogo.uiSpriteSheet.load(2, 2, 2, 2)
+		
 		self.movendo = [False, [0, 0]]
 	
 	def mover(self, x, y, jogo, continuarMovendo=False):
@@ -25,17 +39,21 @@ class Jogador():#pg.sprite.Sprite):
 		self.posMovendo.x = self.pos.x
 		self.posMovendo.y = self.pos.y
 		self.movendo = [True, [x, y]]
-		self.pos.x += x*16
-		self.pos.y += y*16
+		self.pos.x += x*8
+		self.pos.y += y*8
 	
 	def podeMover(self, x, y, jogo):
-		novaPos = pg.math.Vector2(self.pos.x+x*16, self.pos.y+y*16)
-		novaPos.x //= 16
-		novaPos.y //= 16
-		if 0<=novaPos.x<len(jogo.mapaManager.grid[0][0]) and 0<=novaPos.y<len(jogo.mapaManager.grid[0]):
-
-			return jogo.mapaManager.colisoes[int(novaPos.y)][int(novaPos.x)]==65
-
+		novaPos = pg.math.Vector2(self.pos.x+x*8, self.pos.y+y*8)
+		novaPos.x //= 8
+		novaPos.y //= 8
+		multiplos = [self.img.get_width()//8, self.img.get_height()//8]
+		if 0<=novaPos.x<len(jogo.mapaManager.grid[0][0])-multiplos[0]+1 and 0<=novaPos.y<len(jogo.mapaManager.grid[0])-multiplos[1]+1:
+			
+			for x in range(multiplos[0]):
+				for y in range(multiplos[1]):
+					 if jogo.mapaManager.colisoes[int(novaPos.y+y)][int(novaPos.x+x)]!=257:
+					 	return False
+			return True
 		return False
 	
 	def update(self, jogo):
@@ -100,41 +118,12 @@ class Jogador():#pg.sprite.Sprite):
 		if self.movendo[1][1]==-1 and self.posMovendo.y<self.pos.y: return True
 		
 	def show(self, display, camera):
-		if not self.movendo[0]:
-			pos = self.pos-camera.pos
-			pos.x = int(pos.x)
-			pos.y = int(pos.y)-2
-		else:
-			pos = self.posMovendo-camera.pos
-			pos.x = int(pos.x)
-			pos.y = int(pos.y)-2
-		display.blit(self.img, pos)
-		
-			
-	def showUi(self, display):
-		self.botaoCima.show(display)
-		self.botaoBaixo.show(display)
-		self.botaoDireita.show(display)
-		self.botaoEsquerda.show(display)
-		
-class Botao():
-	def __init__(self, x, y, img):
-		self.img = pg.image.load("recursos/sprites/botoes/"+img+".png").convert()
-		self.img.set_colorkey((0, 0, 0))
-		self.Rect = pg.Rect((x, y), self.img.get_size())
-		self.pressionado = False
-
-	def pressionandoMouse(self, mousePos):
-		if self.Rect.collidepoint(mousePos):
-			self.pressionado = True
-		else:
-			self.pressionado = False
-	
-	def tirandoMouse(self, mousePos):
-		if self.Rect.collidepoint(mousePos):
-			self.pressionado = False
-			
-	def show(self, display):
-		display.blit(self.img, self.Rect)
-#		if self.pressionado:
-#			pg.draw.rect(display, (224, 123, 44), self.Rect)
+#		if not self.movendo[0]:
+#			pos = self.pos-camera.pos
+#			#pos.x = int(pos.x)
+#			pos.y = int(pos.y)-2
+#		else:
+		pos = self.posMovendo-camera.pos
+			#pos.x = int(pos.x)
+		#pos.y -= 2
+		display.blit(self.img, pos)		

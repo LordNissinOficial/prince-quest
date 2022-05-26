@@ -1,4 +1,5 @@
 from pygame import (math, image, Surface, Rect)
+from scripts.config import *
 from tmx import TileMap
 
 #pg.init()
@@ -13,7 +14,7 @@ class MapaManager:
 		self.tilesDic = None
 		self.funcoes = None
 		self.tiles = None
-		self.novoMapa("mapa1")
+		self.novoMapa("mapa-mundi")
 	
 	
 #	def __getstate__(self):
@@ -49,10 +50,10 @@ class MapaManager:
 		#self.grid = []
 		print("name", filename)
 		self.mapa = TileMap.load(f'recursos/mapas/{filename}.tmx')
-		self.funcoes = self.mapa.layers[-1].objects
+		self.funcoes = []#self.mapa.layers[-1].objects
 		#print("funcoes", self.funcoes)
 		self.tileset = self.mapa.tilesets[0]
-		print("tileset", self.tileset.name)
+		print("tileset", self.tileset.name, "size", (self.tileset.tilewidth, self.tileset.tileheight))
 		self.tilesPraDicionario(self.tileset.tiles)
 		#self.tilesetImg = image.load("recursos/sprites/tilesets/tileset_1.png").convert()
 		tilesetImg = image.load(f"recursos/sprites/tilesets/{self.tileset.image.source.split('/')[-1]}").convert()
@@ -105,14 +106,17 @@ class MapaManager:
 		lista = {}
 		for y in range(int(tileset.get_height()/tileAltura)):
 			for x in range(int(tileset.get_width()/tileLargura)):
-				surface = Surface((tileLargura, tileAltura)).convert()
+				surface = Surface((tileLargura, tileAltura))
 				rect = Rect((x*tileLargura, y*tileAltura, tileLargura, tileAltura))
 				surface.blit(tileset, (0, 0), rect)
+				surface = surface.convert()
 				surface.set_colorkey((0, 0, 0))
 				if not self.transparente(surface):
 					#print("gid", y*int(tileset.get_width()/tileLargura)+x+1)
 					#print((x, y), y*int(tileset.get_width()/tileLargura)+x+1)
 					lista[y*int(tileset.get_width()/tileLargura)+x+1] = surface
+					#print(y*int(tileset.get_width()/tileLargura)+x+1)
+				#else: print(y*int(tileset.get_width()/tileLargura)+x+1)
 		return lista
 ##retorna true se a surface for toda transparente
 	def transparente(self, surface):
@@ -154,15 +158,17 @@ class MapaManager:
 		return Rect((x, y, self.tileset.tilewidth, self.tileset.tileheight))	
 
 	def show(self, camera, display, jogador):
-		minY = max(int(camera.pos.y/16), 0)
-		minX = max(int(camera.pos.x/16), 0)
+		camera.pos.x = min(self.mapa.width*8-DISPLAY_TAMANHO[0], camera.pos.x)
+		camera.pos.y = min(self.mapa.height*8-DISPLAY_TAMANHO[1], camera.pos.y)
+		minY = max(int(camera.pos.y/8), 0)
+		minX = max(int(camera.pos.x/8), 0)
 		#print(self.mapa.width)
-		maxY = min(int(camera.pos.y/16)+camera.altura+1, self.mapa.height)
-		maxX = min(int(camera.pos.x/16)+camera.largura+1, self.mapa.width)
+		maxY = min(int(camera.pos.y/8)+camera.altura+1, self.mapa.height)
+		maxX = min(int(camera.pos.x/8)+camera.largura+1, self.mapa.width)
 		#print(minX, maxX)
 #		print(minY, maxY)
 		self.showLayer(0, camera, display, jogador, minX, minY, maxX, maxY)
-		self.showLayer(1, camera, display, jogador, minX, minY, maxX, maxY)
+		#self.showLayer(1, camera, display, jogador, minX, minY, maxX, maxY)
 		
 	def showLayer(self, layer, camera, display, jogadores, minX, minY, maxX, maxY):	
 		#if f"{self.tileset.image.source.split('/')[-1]}"=="casa1.png":
@@ -186,30 +192,30 @@ class MapaManager:
 		
 	def showGid(self, layer, display, camera, x, y, jogador):##mostrar os jogadores por arqui na frente da layer 1 e atras da layer 2
 		#(minX, maxX), (minY, maxY))
-		if layer==1:
-			#for jogador in jogadores.values():
-			jogadorX = round(jogador.pos.x/16)
-			jogadorY = round(jogador.pos.y/16)
-			embaixo = True
-			if self.grid[layer][y][x] in self.tilesDic.keys():
-				embaixo = self.tilesDic[self.grid[layer][y][x]]["embaixo de entidade"]
-			if x in [jogadorX, jogadorX+1] and y in [jogadorY, jogadorY+1] and embaixo:
-				jogador.show(display, camera)
+		#if layer==1:
+#			#for jogador in jogadores.values():
+#			jogadorX = round(jogador.pos.x/self.tileset.tilewidth)
+#			jogadorY = round(jogador.pos.y/self.tileset.tileheight)
+#			embaixo = True
+#			if self.grid[layer][y][x] in self.tilesDic.keys():
+#				embaixo = self.tilesDic[self.grid[layer][y][x]]["embaixo de entidade"]
+#			if x in [jogadorX, jogadorX+1] and y in [jogadorY, jogadorY+1] and embaixo:
+#				jogador.show(display, camera)
 			
-		if self.grid[layer][y][x]!=0:
+		#if self.grid[layer][y][x]!=0:
 
 			
-			display.blit(self.tiles[self.grid[layer][y][x]], (x*16-int(camera.pos.x), y*16-int(camera.pos.y)))
+		display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))
 
-			jogadorX = round(jogador.pos.x/16)
-			jogadorY = round(jogador.pos.y/16)
-			embaixo = True
-			if self.grid[layer][y][x] in self.tilesDic.keys():
+		jogadorX = round(jogador.pos.x/self.tileset.tilewidth)
+		jogadorY = round(jogador.pos.y/self.tileset.tileheight)
+		#embaixo = True
+		#if self.grid[layer][y][x] in self.tilesDic.keys():
 				
-				embaixo = self.tilesDic[self.grid[layer][y][x]]["embaixo de entidade"]
-			if x in [jogadorX, jogadorX+1] and y in [jogadorY, jogadorY+1] and not embaixo and layer==1:#self.tilesDic[self.grid[layer][y][x]]["embaixo de entidade"]:
+			#embaixo = self.tilesDic[self.grid[layer][y][x]]["embaixo de entidade"]
+		if x in [jogadorX, jogadorX+1, jogadorX+2] and y in [jogadorY, jogadorY+1, jogadorY+2]: #and not embaixo and layer==1:#self.tilesDic[self.grid[layer][y][x]]["embaixo de entidade"]:
 				#print(54)
-				jogador.show(display, camera)
+			jogador.show(display, camera)
 		
 #		if self.grid[1][y][x]!=0:
 #			for jogador in jogadores.values():

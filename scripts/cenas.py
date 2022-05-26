@@ -1,6 +1,8 @@
 import pygame as pg
 #import pickle, copy
 from enum import Enum
+from scripts.uiComponentes import Botao
+from scripts.spritesheet import SpriteSheet
 from scripts.mapaManager import MapaManager
 from scripts.camera import Camera
 from scripts.jogador import Jogador
@@ -12,6 +14,7 @@ class CenaManager():
 	"""classe principal que cuida do jogo atual"""
 	def __init__(self):
 		self.estado = ESTADOS.MENUPRINCIPAL
+		self.uiSpriteSheet = SpriteSheet("ui")
 		#self.fade = Fade1()
 		self.deltatime = 0
 		self.jogoAntigo = None
@@ -29,7 +32,7 @@ class CenaManager():
 	"""reinicia o jogo atual"""	
 	def setUp(self):
 		self.jogoAntigo = self.jogo
-		self.jogo = ESTADOS.estados.value[self.estado.value]()
+		self.jogo = ESTADOS.estados.value[self.estado.value](self)
 		
 #		if self.jogoAntigo:
 #			self.fade.fadeOut()
@@ -65,19 +68,22 @@ class CenaManager():
 #			tela.blit(pg.transform.scale(displayCopia, tela.get_size()), (0, 0))
 #			return
 		self.jogo.show()
-		tela.blit(pg.transform.scale(self.jogo.display, tela.get_size()), (0, 0))
+		pg.transform.scale(self.jogo.display, tela.get_size(), tela)
 
 class Overworld():
-	def __init__(self):
-		self.display = pg.Surface(DISPLAY_TAMANHO).convert()
+	def __init__(self, cenaManager):
+		self.display = pg.Surface((256, 144)).convert()
+		self.mapaDisplay = pg.Surface((DISPLAY_TAMANHO)).convert()
+		self.uiSpriteSheet = SpriteSheet("ui")
 		self.mapaManager = MapaManager()
-		self.cor = (40, 40, 60)
+		
+		self.cor = (38, 43, 68)
 		self.camera = Camera()
-		self.jogador = Jogador(2, 2)
+		self.jogador = Jogador(5, 5, self)
 
-	def update(self, cenaManager):
-		self.camera.moverPara(self.jogador.posMovendo.x, self.jogador.posMovendo.y)
+	def update(self, cenaManager):		
 		self.jogador.update(self)
+		self.camera.moverPara(self.jogador.posMovendo.x, self.jogador.posMovendo.y)
 	
 		self.lidarEventos(cenaManager)
 		#self.jogadores[0].pos.x += 2
@@ -88,34 +94,49 @@ class Overworld():
 
 
 	def show(self):
-	
 		self.display.fill(self.cor)
-		self.mapaManager.show(self.camera, self.display, self.jogador)
-		self.jogador.showUi(self.display)
+		self.mapaDisplay.fill(self.cor)
+		self.mapaManager.show(self.camera, self.mapaDisplay, self.jogador)		
+		self.display.blit(self.mapaDisplay, (48, 0))
+		self.showUi()
+		#pg.draw.rect(self.display, (100, 140, 100), (24, 144-55, 16, 16))
+#		pg.draw.rect(self.mapaDisplay, (100, 140, 100), (24, 144-55, 16, 16))
+	
+	def showUi(self):
+		self.jogador.botaoCima.show(self.display)
+		self.jogador.botaoBaixo.show(self.display)
+		self.jogador.botaoDireita.show(self.display)
+		self.jogador.botaoEsquerda.show(self.display)
 
 	def lidarEventos(self, cenaManager):
 		for evento in cenaManager.eventos:			
 			if evento.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEMOTION]:
-				pos = list(evento.pos)
-				pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
-				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
+				pos = telaParaDisplay(*evento.pos)
+#				pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
+#				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
 				self.jogador.botaoCima.pressionandoMouse(pos)
 				self.jogador.botaoBaixo.pressionandoMouse(pos)
 				self.jogador.botaoDireita.pressionandoMouse(pos)
 				self.jogador.botaoEsquerda.pressionandoMouse(pos)
 				
 			elif evento.type==pg.MOUSEBUTTONUP:
-				pos = list(evento.pos)
-				pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
-				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
+				pos = telaParaDisplay(*evento.pos)
+				#pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
+#				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
 				self.jogador.botaoCima.tirandoMouse(pos)
 				self.jogador.botaoBaixo.tirandoMouse(pos)
 				self.jogador.botaoDireita.tirandoMouse(pos)
 				self.jogador.botaoEsquerda.tirandoMouse(pos)
-
+				
+	
+		
 class ESTADOS(Enum):
 	OVERWORLD = 0
 	MENUPRINCIPAL = 1
 	MENUCONFIGURACOES = 2
 	MENUAJUDA = 3
 	estados = [Overworld]#MenuPrincipal, MenuConfiguracoes]
+	
+def telaParaDisplay(x, y):
+	return [int(x/TELA_TAMANHO[0]*DISPLAY_TAMANHO_REAL[0]),
+				int(y/TELA_TAMANHO[1]*DISPLAY_TAMANHO_REAL[1])]

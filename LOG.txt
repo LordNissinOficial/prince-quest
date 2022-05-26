@@ -1,83 +1,26 @@
 começou: 1/03/2022 9:20 pm
 terminou: sem limite
 
-sobre: tentativa de criar um clone de pokemon baseado no red de game boy e fire red de game boy advance.
+sobre: rpg retro inspirado em dragon quest e final fantasy com o foco principal em diferentes sistemas como alquimia e classes.
 
-ps: o projeto de um jogo multiplayer foi usado como base.
+ps: o projeto de um clone de pokemon foi usado como base
 
 dia 1:
 
-tempo programando:
+tempo trabalhando:
 
-2 horas e 10 minutos
+5 minutos
 
-linhas escritas:
-
-470
-
-programado:
-•base da classe de cenaManager.
-•mudado o sprite de arvore.
-•aprimorado o movimento.
+feito:
+•me acostumei com o código.
 
 dia 2:
 
-tempo programando:
+tempo trabalhando:
 
-2 hora e 40 minutos
+2 hora e 10 minutos
 
-
-linhas escritas:
-
-470
-programado:
-•base das transicoes.
-•criado tileset basico pra casa do jogador.
-•base dos warp.
-
-
-dia 3:
-
-tempo programando:
-
-40 minutos
-
-linhas escritas:
-
-470
-
-programado:
-•trabalhando no sprite da casa.
-
-
-dia 4:
-
-tempo programando:
-
-1 hora e 35 minutos 
-
-linhas escritas:
-
-522
-
-programado:
-•base do warp.
-•tilesets convertidos para .tsx.
-
-dia 5:
-
-tempo programando:
-
-1 hora e 30 minutos
-
-linha escritas:
-
-538
-
-programado:
-•tiles da layer 2 podem ficar atras ou na frente do jogador.
-•arrumado warp.
-
-dia 6:
-
-decidido deixar o projeto ate completar mais projetos pequenos.
+feito:
+•modificacao do codigo para funcionar com tiles 8x8.
+•adicionado classe para spritesheets.
+•adicionado spritesheet da ui

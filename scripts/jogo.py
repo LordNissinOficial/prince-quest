@@ -13,7 +13,7 @@ class Jogo():
 		self.mapaManager = MapaManager()
 		self.cor = (75, 53, 97)
 		self.jogoId = jogoId
-		self.jogadores = {}
+#		self.jogadores = {}
 		self.jogadores[55].pos.x = 22*16
 		self.updates = 0
 	
