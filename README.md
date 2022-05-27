@@ -1,2 +1,10 @@
 # the-hero-prince
-Jogo inspirado por dragon quest e final fantasy.
+rpg retro inspirado por jogos como dragon quest e final fantasy.
+
+meu objetivo para esse jogo e um rpg com varios sistemas unicos
+que interagem entre si.
+
+# sistemas que eu planejo adicionar sao:
+* alquimia
+* skills
+* classes
