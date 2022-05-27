@@ -43,14 +43,14 @@ class MapaManager:
 		del self.mapa
 		del self.tileset
 		del self.funcoes
-		del self.tilesetImg
+		#del self.tilesetImg
 		del self.grid
 		del self.colisoes
 		del self.tiles
 		#self.grid = []
 		print("name", filename)
 		self.mapa = TileMap.load(f'recursos/mapas/{filename}.tmx')
-		self.funcoes = []#self.mapa.layers[-1].objects
+		self.funcoes = self.mapa.layers[-1].objects
 		#print("funcoes", self.funcoes)
 		self.tileset = self.mapa.tilesets[0]
 		print("tileset", self.tileset.name, "size", (self.tileset.tilewidth, self.tileset.tileheight))
@@ -69,6 +69,7 @@ class MapaManager:
 		#print(self.funcoes)
 		for funcao in self.funcoes:
 			if funcao.type=="warp":
+				print(True)
 				rect = Rect((funcao.x, funcao.y, funcao.width, funcao.height))
 				if entidadeRect.colliderect(rect):
 					return [True, funcao]
@@ -99,7 +100,7 @@ class MapaManager:
 	def carregarMapa(self):
 		y = 0
 		for layer in self.mapa.layers:
-			if layer.name!="funções":
+			if layer.name!="funcoes":
 				self.layerPraGrid(layer)
 			
 	def tilesetPraLista(self, tileset, tileLargura, tileAltura):

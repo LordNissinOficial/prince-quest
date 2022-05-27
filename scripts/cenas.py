@@ -1,5 +1,5 @@
 import pygame as pg
-#import pickle, copy
+import pickle, copy
 from enum import Enum
 from scripts.uiComponentes import Botao
 from scripts.spritesheet import SpriteSheet
@@ -75,6 +75,7 @@ class Overworld():
 		self.display = pg.Surface((256, 144)).convert()
 		self.mapaDisplay = pg.Surface((DISPLAY_TAMANHO)).convert()
 		self.uiSpriteSheet = SpriteSheet("ui")
+		#self.uiSpriteSheet = SpriteSheet("ui_antiga")
 		self.mapaManager = MapaManager()
 		
 		self.cor = (38, 43, 68)
@@ -111,6 +112,7 @@ class Overworld():
 	def lidarEventos(self, cenaManager):
 		for evento in cenaManager.eventos:			
 			if evento.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEMOTION]:
+
 				pos = telaParaDisplay(*evento.pos)
 #				pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
 #				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
@@ -120,6 +122,7 @@ class Overworld():
 				self.jogador.botaoEsquerda.pressionandoMouse(pos)
 				
 			elif evento.type==pg.MOUSEBUTTONUP:
+				#self.uiSpriteSheet.m("ui")
 				pos = telaParaDisplay(*evento.pos)
 				#pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
 #				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])

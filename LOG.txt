@@ -1,4 +1,4 @@
-começou: 1/03/2022 9:20 pm
+começou: 24/05/2022 9:20 pm
 terminou: sem limite
 
 sobre: rpg retro inspirado em dragon quest e final fantasy com o foco principal em diferentes sistemas como alquimia e classes.
@@ -24,3 +24,14 @@ feito:
 •modificacao do codigo para funcionar com tiles 8x8.
 •adicionado classe para spritesheets.
 •adicionado spritesheet da ui
+
+dia 3:
+
+tempo trabalhando:
+
+1 hora e 55  minutos
+
+feito:
+•feito mockup de como a ui do jogo poderia olhar.
+•feito sprites de botoes de inventario, equipamento e status.
+•feito o tileset para o castelo.
