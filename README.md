@@ -1,4 +1,6 @@
 # the-hero-prince
+
+![tela de inicio](recursos/socials/title-screen.gif)
 rpg retro inspirado por jogos como dragon quest e final fantasy.
 
 meu objetivo para esse jogo e um rpg com varios sistemas unicos
