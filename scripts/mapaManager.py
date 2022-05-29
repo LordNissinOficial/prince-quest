@@ -69,11 +69,12 @@ class MapaManager:
 		#print(self.funcoes)
 		for funcao in self.funcoes:
 			if funcao.type=="warp":
-				print(True)
+				#print(True)
 				rect = Rect((funcao.x, funcao.y, funcao.width, funcao.height))
 				if entidadeRect.colliderect(rect):
-					return [True, funcao]
-					
+					return funcao
+		return False
+				
 	def entrarWarp(self, Rect):
 		for funcao in self.funcoes:
 			if funcao.type=="warp" and self.emWarp(Rect):
@@ -208,8 +209,8 @@ class MapaManager:
 			
 		display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))
 
-		jogadorX = round(jogador.pos.x/self.tileset.tilewidth)
-		jogadorY = round(jogador.pos.y/self.tileset.tileheight)
+		jogadorX = round(jogador.x/self.tileset.tilewidth)
+		jogadorY = round(jogador.y/self.tileset.tileheight)
 		#embaixo = True
 		#if self.grid[layer][y][x] in self.tilesDic.keys():
 				

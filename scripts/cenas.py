@@ -72,19 +72,20 @@ class CenaManager():
 
 class Overworld():
 	def __init__(self, cenaManager):
+		self.deltaTime = 0
 		self.display = pg.Surface((256, 144)).convert()
 		self.mapaDisplay = pg.Surface((DISPLAY_TAMANHO)).convert()
 		self.uiSpriteSheet = SpriteSheet("ui")
 		#self.uiSpriteSheet = SpriteSheet("ui_antiga")
 		self.mapaManager = MapaManager()
 		
-		self.cor = (38, 43, 68)
+		self.cor = (62, 39, 49)
 		self.camera = Camera()
 		self.jogador = Jogador(5, 5, self)
 
 	def update(self, cenaManager):		
 		self.jogador.update(self)
-		self.camera.moverPara(self.jogador.posMovendo.x, self.jogador.posMovendo.y)
+		self.camera.moverPara(self.jogador.xMovendo, self.jogador.yMovendo)
 	
 		self.lidarEventos(cenaManager)
 		#self.jogadores[0].pos.x += 2

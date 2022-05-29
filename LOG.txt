@@ -23,15 +23,32 @@ tempo trabalhando:
 feito:
 •modificacao do codigo para funcionar com tiles 8x8.
 •adicionado classe para spritesheets.
-•adicionado spritesheet da ui
+•adicionado spritesheet da ui.
 
 dia 3:
 
 tempo trabalhando:
 
-1 hora e 55  minutos
+3 hora e 30  minutos
 
 feito:
 •feito mockup de como a ui do jogo poderia olhar.
+•feito mockup de como a tela de início poderia olhar.
 •feito sprites de botoes de inventario, equipamento e status.
 •feito o tileset para o castelo.
+•adicionado suporte para warps.
+
+dia 4:
+
+tempo trabalhando:
+
+2 horas e 10 minutos
+
+feito:
+
+•melhorias na tela de inicio.
+•arrumado bug em que era possivel entrar no warp que estava saindo.
+•criado classe para entidades em geral.
+•entidades agora se movem com delta time.
+•adicionado spritesheet para personagems.
+•adicionado sprites para os  movimentos do jogador.
