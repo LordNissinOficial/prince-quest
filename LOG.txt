@@ -52,3 +52,18 @@ feito:
 •entidades agora se movem com delta time.
 •adicionado spritesheet para personagems.
 •adicionado sprites para os  movimentos do jogador.
+
+dia 5:
+
+tempo trabalhando:
+
+1 hora e 55 minutos
+
+feito:
+
+•arrumado pixel errado no castelo do overworld.
+•feito prototipo dos possiveis estilos visuais das batalhas.
+•limpado codigo.
+•comeco da adicao de animacoes.
+•adicionado classe que guarda sprites para serem reusados.
+•feito mudancas no tileset do mapa-mundi.

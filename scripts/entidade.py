@@ -36,8 +36,8 @@ class Entidade():
 	def updateMovimento(self, jogo):
 		if self.movendo[0]:
 			movendo = True
-			self.xMovendo += self.movendo[1][0]*32*jogo.deltaTime
-			self.yMovendo += self.movendo[1][1]*32*jogo.deltaTime
+			self.xMovendo += self.movendo[1][0]*48*jogo.deltaTime
+			self.yMovendo += self.movendo[1][1]*48*jogo.deltaTime
 			if self.arrumarPosMovendo():
 				self.movendo = [False, [0, 0]]
 				self.xMovendo = self.x
@@ -45,7 +45,7 @@ class Entidade():
 				
 				if self.emWarp(jogo):
 					self.movendo = [False, [0, 0]]
-					jogo.mapaManager.entrarWarp(pg.Rect((self.pos.x, self.pos.y, 16, 16)))
+					jogo.mapaManager.entrarWarp(pg.Rect((self.x, self.y, self.largura*8, self.altura*8)))
 				return 
 				
 			if self.xMovendo==self.x and self.yMovendo==self.y:
@@ -57,10 +57,7 @@ class Entidade():
 				
 				if self.emWarp(jogo):
 						self.movendo = [False, [0, 0]]
-						jogo.mapaManager.entrarWarp(pg.Rect((self.x, self.y, 16, 16)))
-						#self.x, self.y = (3*16, 8*16)
-						#self.xMovendo, self.yMovendo = (3*16, 8*16)
-						#jogo.camera.pos = pg.math.Vector2(3*16, 8*16)
+						jogo.mapaManager.entrarWarp(pg.Rect((self.x, self.y, self.largura*8, self.altura*8)))##fazer com que a posicao que acaba no novo mapa ea mesma que o warp
 						
 				if not continuarMovendo:					
 					movendo = False

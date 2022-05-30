@@ -2,6 +2,7 @@ import pygame as pg
 import pickle, copy
 from enum import Enum
 from scripts.uiComponentes import Botao
+from scripts.spriteManager import SpriteManager
 from scripts.spritesheet import SpriteSheet
 from scripts.mapaManager import MapaManager
 from scripts.camera import Camera
@@ -11,10 +12,11 @@ from scripts.config import *
 pg.init()
 
 class CenaManager():
-	"""classe principal que cuida do jogo atual"""
+	
+	"""classe principal que cuida do jogo atual"""	
 	def __init__(self):
 		self.estado = ESTADOS.MENUPRINCIPAL
-		self.uiSpriteSheet = SpriteSheet("ui")
+		self.spriteManager = SpriteManager()
 		#self.fade = Fade1()
 		self.deltatime = 0
 		self.jogoAntigo = None
@@ -24,6 +26,7 @@ class CenaManager():
 		self.setJogo(ESTADOS.OVERWORLD)
 		pg.event.set_blocked(None)
 		pg.event.set_allowed([pg.QUIT, pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP, pg.MOUSEMOTION])
+		
 	"""decide o jogo atual"""
 	def setJogo(self, ESTADO):
 		self.estado  = ESTADO
@@ -72,11 +75,11 @@ class CenaManager():
 
 class Overworld():
 	def __init__(self, cenaManager):
+		self.spriteManager = cenaManager.spriteManager
+		self.spriteManager.load("spritesheets/ui")
 		self.deltaTime = 0
 		self.display = pg.Surface((256, 144)).convert()
 		self.mapaDisplay = pg.Surface((DISPLAY_TAMANHO)).convert()
-		self.uiSpriteSheet = SpriteSheet("ui")
-		#self.uiSpriteSheet = SpriteSheet("ui_antiga")
 		self.mapaManager = MapaManager()
 		
 		self.cor = (62, 39, 49)
@@ -97,9 +100,13 @@ class Overworld():
 
 	def show(self):
 		self.display.fill(self.cor)
+		#if self.camera.mudouPosicao():
+#			print(555)
 		self.mapaDisplay.fill(self.cor)
 		self.mapaManager.show(self.camera, self.mapaDisplay, self.jogador)		
+		self.jogador.show(self.mapaDisplay, self.camera)
 		self.display.blit(self.mapaDisplay, (48, 0))
+		
 		self.showUi()
 		#pg.draw.rect(self.display, (100, 140, 100), (24, 144-55, 16, 16))
 #		pg.draw.rect(self.mapaDisplay, (100, 140, 100), (24, 144-55, 16, 16))
@@ -113,26 +120,18 @@ class Overworld():
 	def lidarEventos(self, cenaManager):
 		for evento in cenaManager.eventos:			
 			if evento.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEMOTION]:
-
 				pos = telaParaDisplay(*evento.pos)
-#				pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
-#				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
 				self.jogador.botaoCima.pressionandoMouse(pos)
 				self.jogador.botaoBaixo.pressionandoMouse(pos)
 				self.jogador.botaoDireita.pressionandoMouse(pos)
 				self.jogador.botaoEsquerda.pressionandoMouse(pos)
 				
 			elif evento.type==pg.MOUSEBUTTONUP:
-				#self.uiSpriteSheet.m("ui")
 				pos = telaParaDisplay(*evento.pos)
-				#pos[0] = int(pos[0]/TELA_TAMANHO[0]*DISPLAY_TAMANHO[0])
-#				pos[1] = int(pos[1]/TELA_TAMANHO[1]*DISPLAY_TAMANHO[1])
 				self.jogador.botaoCima.tirandoMouse(pos)
 				self.jogador.botaoBaixo.tirandoMouse(pos)
 				self.jogador.botaoDireita.tirandoMouse(pos)
 				self.jogador.botaoEsquerda.tirandoMouse(pos)
-				
-	
 		
 class ESTADOS(Enum):
 	OVERWORLD = 0
