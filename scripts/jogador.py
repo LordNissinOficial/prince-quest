@@ -1,14 +1,12 @@
-import pygame as pg
+from pygame.image import load
 from scripts.entidade import Entidade
 from scripts.uiComponentes import Botao
 from scripts.config import *
 
-pg.init()
-
 
 class Jogador(Entidade):#pg.sprite.Sprite):
 	def __init__(self, x, y, jogo):
-		self.img = pg.image.load("recursos/sprites/jogador.png").convert()
+		self.img = load("recursos/sprites/jogador.png").convert()
 		self.img.set_colorkey((0, 0, 0))
 		Entidade.__init__(self, x, y, self.img.get_width(), self.img.get_height())
 		

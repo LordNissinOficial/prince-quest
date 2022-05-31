@@ -1,4 +1,4 @@
-import pygame as pg
+from pygame import Rect
 
 
 class Entidade():
@@ -45,7 +45,7 @@ class Entidade():
 				
 				if self.emWarp(jogo):
 					self.movendo = [False, [0, 0]]
-					jogo.mapaManager.entrarWarp(pg.Rect((self.x, self.y, self.largura*8, self.altura*8)))
+					jogo.mapaManager.entrarWarp(Rect((self.x, self.y, self.largura*8, self.altura*8)))
 				return 
 				
 			if self.xMovendo==self.x and self.yMovendo==self.y:
@@ -57,7 +57,7 @@ class Entidade():
 				
 				if self.emWarp(jogo):
 						self.movendo = [False, [0, 0]]
-						jogo.mapaManager.entrarWarp(pg.Rect((self.x, self.y, self.largura*8, self.altura*8)))##fazer com que a posicao que acaba no novo mapa ea mesma que o warp
+						jogo.mapaManager.entrarWarp(Rect((self.x, self.y, self.largura*8, self.altura*8)))##fazer com que a posicao que acaba no novo mapa ea mesma que o warp
 						
 				if not continuarMovendo:					
 					movendo = False
@@ -75,7 +75,7 @@ class Entidade():
 		if self.movendo[1][1]==-1 and self.yMovendo<self.y: return True
 
 	def emWarp(self, jogo):
-		warp = jogo.mapaManager.emWarp(pg.Rect(self.x, self.y, self.largura*8, self.altura*8))
+		warp = jogo.mapaManager.emWarp(Rect(self.x, self.y, self.largura*8, self.altura*8))
 		if warp:
 			warpId = [propertie.value for propertie in warp.properties if propertie.name=="warp_id"][0]
 			if warpId==self.dentroDeWarp: return False

@@ -1,4 +1,9 @@
-import pygame as pg
+from pygame import event# as event
+from pygame import Surface
+from pygame.transform import scale
+from pygame.locals import (QUIT, MOUSEBUTTONDOWN, MOUSEMOTION, MOUSEBUTTONUP)
+#from pygame import ()
+#import pygame as pg
 import pickle, copy
 from enum import Enum
 from scripts.uiComponentes import Botao
@@ -8,8 +13,6 @@ from scripts.mapaManager import MapaManager
 from scripts.camera import Camera
 from scripts.jogador import Jogador
 from scripts.config import *
-
-pg.init()
 
 class CenaManager():
 	
@@ -24,8 +27,8 @@ class CenaManager():
 		self.rodando = 1
 		self.eventos = []
 		self.setJogo(ESTADOS.OVERWORLD)
-		pg.event.set_blocked(None)
-		pg.event.set_allowed([pg.QUIT, pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP, pg.MOUSEMOTION])
+		event.set_blocked(None)
+		event.set_allowed([QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION])
 		
 	"""decide o jogo atual"""
 	def setJogo(self, ESTADO):
@@ -53,7 +56,7 @@ class CenaManager():
 #				return
 #			else:
 #				self.fade.update(self)
-		self.eventos = pg.event.get()
+		self.eventos = event.get()
 		self.jogo.update(self)
 
 	
@@ -68,48 +71,39 @@ class CenaManager():
 #				displayCopia = self.jogo.display.copy()
 
 #			self.fade.show(displayCopia)
-#			tela.blit(pg.transform.scale(displayCopia, tela.get_size()), (0, 0))
+#			tela.blit(transform.scale(displayCopia, tela.get_size()), (0, 0))
 #			return
 		self.jogo.show()
-		pg.transform.scale(self.jogo.display, tela.get_size(), tela)
+		scale(self.jogo.display, TELA_TAMANHO, tela)
+		#print(555)
 
 class Overworld():
 	def __init__(self, cenaManager):
 		self.spriteManager = cenaManager.spriteManager
 		self.spriteManager.load("spritesheets/ui")
 		self.deltaTime = 0
-		self.display = pg.Surface((256, 144)).convert()
-		self.mapaDisplay = pg.Surface((DISPLAY_TAMANHO)).convert()
-		self.mapaManager = MapaManager()
-		
-		self.cor = (62, 39, 49)
 		self.camera = Camera()
 		self.jogador = Jogador(5, 5, self)
+		self.display = Surface((256, 144)).convert()
+		self.mapaDisplay = Surface((DISPLAY_TAMANHO)).convert()
+		self.mapaManager = MapaManager(self.camera)
+		self.cor = (62, 39, 49)		
 
 	def update(self, cenaManager):		
 		self.jogador.update(self)
-		self.camera.moverPara(self.jogador.xMovendo, self.jogador.yMovendo)
+		self.camera.moverPara(self.jogador.xMovendo, self.jogador.yMovendo, self.mapaManager.mapa)
 	
 		self.lidarEventos(cenaManager)
-		#self.jogadores[0].pos.x += 2
-		#self.camera.pos.x += 1
-		#self.camera.moverPara(self.jogadores[0].pos.x, self.jogadores[0].pos.y)
-		#print("camera", self.camera.pos.x)
-#		raise Exception("a")
-
 
 	def show(self):
 		self.display.fill(self.cor)
-		#if self.camera.mudouPosicao():
-#			print(555)
-		self.mapaDisplay.fill(self.cor)
-		self.mapaManager.show(self.camera, self.mapaDisplay, self.jogador)		
+		if self.camera.mudouPosicao()==True:
+			self.mapaManager.show(self.camera)
+		
+		self.mapaDisplay.blit(self.mapaManager.display, (0, 0))
 		self.jogador.show(self.mapaDisplay, self.camera)
 		self.display.blit(self.mapaDisplay, (48, 0))
-		
 		self.showUi()
-		#pg.draw.rect(self.display, (100, 140, 100), (24, 144-55, 16, 16))
-#		pg.draw.rect(self.mapaDisplay, (100, 140, 100), (24, 144-55, 16, 16))
 	
 	def showUi(self):
 		self.jogador.botaoCima.show(self.display)
@@ -119,14 +113,14 @@ class Overworld():
 
 	def lidarEventos(self, cenaManager):
 		for evento in cenaManager.eventos:			
-			if evento.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEMOTION]:
+			if evento.type in [MOUSEBUTTONDOWN, MOUSEMOTION]:
 				pos = telaParaDisplay(*evento.pos)
 				self.jogador.botaoCima.pressionandoMouse(pos)
 				self.jogador.botaoBaixo.pressionandoMouse(pos)
 				self.jogador.botaoDireita.pressionandoMouse(pos)
 				self.jogador.botaoEsquerda.pressionandoMouse(pos)
 				
-			elif evento.type==pg.MOUSEBUTTONUP:
+			elif evento.type==MOUSEBUTTONUP:
 				pos = telaParaDisplay(*evento.pos)
 				self.jogador.botaoCima.tirandoMouse(pos)
 				self.jogador.botaoBaixo.tirandoMouse(pos)

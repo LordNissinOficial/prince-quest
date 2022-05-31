@@ -1,4 +1,3 @@
-
 class Animacao:
 	def __init__(self, filename, comeco, tileTamanho, rect, duracoes):
 		self.comeco = comeco
@@ -12,7 +11,8 @@ class Animacao:
 		
 	def update(self):
 		self.spriteAtual += tileTamanho[0]
-		if self.spriteAtual>
+		if self.spriteAtual>self.spriteMaximo:
+			self.spriteAtual = 0
 	
 	def podeUpdatear(self, tempo):
 		if not tempoAntigo: return False

@@ -1,9 +1,11 @@
-from pygame import (math, image, Surface, Rect)
+from pygame import (image, Surface, Rect)
 from scripts.config import *
 from tmx import TileMap
 
 class MapaManager:
-	def __init__(self):
+	def __init__(self, camera):
+		self.camera = camera
+		self.display = Surface(DISPLAY_TAMANHO).convert()
 		self.mapa = None
 		self.colisoes = None
 		self.grid = None
@@ -12,6 +14,7 @@ class MapaManager:
 		self.funcoes = None
 		self.tiles = None
 		self.novoMapa("mapa-mundi")
+		self.show(camera)
 	
 #	def __getstate__(self):
 #		state = self.__dict__.copy()
@@ -50,12 +53,12 @@ class MapaManager:
 		print("tileset", self.tileset.name, "size", (self.tileset.tilewidth, self.tileset.tileheight))
 		self.tilesPraDicionario(self.tileset.tiles)
 		tilesetImg = image.load(f"recursos/sprites/tilesets/{self.tileset.image.source.split('/')[-1]}").convert()
-		#tilesetImg.set_colorkey((0, 0, 0))
 		self.grid = []
 		self.colisoes = []
 		self.tiles = self.tilesetPraLista(tilesetImg, self.tileset.tilewidth, self.tileset.tileheight)
 		del tilesetImg
 		self.carregarMapa()
+		self.show(self.camera)
 	
 	def emWarp(self, entidadeRect):
 		for funcao in self.funcoes:
@@ -95,7 +98,7 @@ class MapaManager:
 		lista = {}
 		for y in range(tileset.get_height()//tileAltura):
 			for x in range(tileset.get_width()//tileLargura):
-				surface = Surface((tileLargura, tileAltura))#.convert()
+				surface = Surface((tileLargura, tileAltura))
 				rect = Rect((x*tileLargura, y*tileAltura, tileLargura, tileAltura))
 				surface.blit(tileset, (0, 0), rect)
 				if not self.transparente(surface):
@@ -130,31 +133,21 @@ class MapaManager:
 		y = pos[1]*self.tileset.tileheight
 		return Rect((x, y, self.tileset.tilewidth, self.tileset.tileheight))	
 
-	def show(self, camera, display, jogador):
-		camera.pos.x = min(self.mapa.width*8-DISPLAY_TAMANHO[0], camera.pos.x)
-		camera.pos.y = min(self.mapa.height*8-DISPLAY_TAMANHO[1], camera.pos.y)
-		
+	def show(self, camera):
 		minY = max(int(camera.pos.y/8), 0)
+		maxY = min(int(camera.pos.y/8+camera.altura+1), self.mapa.height)
 		minX = max(int(camera.pos.x/8), 0)
+		maxX = min(int(camera.pos.x/8+camera.largura+1), self.mapa.width)		
 
-		maxY = min(int(camera.pos.y/8)+camera.altura+1, self.mapa.height)
-		maxX = min(int(camera.pos.x/8)+camera.largura+1, self.mapa.width)
-
-		self.showLayer(0, camera, display, jogador, minX, minY, maxX, maxY)
+		self.showLayer(0, camera, minX, minY, maxX, maxY)
 		
-	def showLayer(self, layer, camera, display, jogadores, minX, minY, maxX, maxY):	
-		y = minY
-		while y<maxY:			
-			x = minX
-			while x<maxX:	
-				self.showGid(layer, display, camera, x, y, jogadores)
-				x += 1
-			y += 1
+	def showLayer(self, layer, camera, minX, minY, maxX, maxY):
 		
-	def showGid(self, layer, display, camera, x, y, jogador):		
-		display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))
-
-#		jogadorX = round(jogador.x/self.tileset.tilewidth)
-#		jogadorY = round(jogador.y/self.tileset.tileheight)
-#		if x in [jogadorX, jogadorX+1, jogadorX+2] and y in [jogadorY, jogadorY+1, jogadorY+2]: 
-#			jogador.show(display, camera)
+		for y in range(minY, maxY):
+			for x in range(minX, maxX):
+				self.display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))
+				#self.showGid(layer, camera, x, y)
+				#10**5
+		
+#	def showGid(self, layer, camera, x, y):		
+#		self.display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))

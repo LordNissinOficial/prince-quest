@@ -67,3 +67,13 @@ feito:
 •comeco da adicao de animacoes.
 •adicionado classe que guarda sprites para serem reusados.
 •feito mudancas no tileset do mapa-mundi.
+
+dia 6:
+
+tempo trabalhando:
+
+1 horas e 30 minutos
+
+feito:
+
+•codigo optmizado para rodar com um fps de 40 em celulares.

@@ -1,4 +1,4 @@
-from pygame.image import load
+from pygame.image import load as loadImage
 
 class SpriteManager():
 	def __init__(self):
@@ -9,7 +9,7 @@ class SpriteManager():
 	def load(self, filename, rect=None):
 		if filename not in self.sprites:
 			try:
-				self.sprites[filename] = load(self.path+filename+".png").convert()
+				self.sprites[filename] = loadImage(self.path+filename+".png").convert()
 				self.sprites[filename].set_colorkey((0, 0, 0))
 			except:
 				raise Exception(f"nao foi possivel carregar arquivo {self.path+filename+'.png'}")
