@@ -77,3 +77,13 @@ tempo trabalhando:
 feito:
 
 •codigo optmizado para rodar com um fps de 40 em celulares.
+
+dia 7:
+
+tempo trabalhando:
+
+1 hora e 10 minutos
+
+feito:
+•mockup do inventario.
+•base do inventario

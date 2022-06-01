@@ -7,6 +7,7 @@ from pygame.locals import (QUIT, MOUSEBUTTONDOWN, MOUSEMOTION, MOUSEBUTTONUP)
 import pickle, copy
 from enum import Enum
 from scripts.uiComponentes import Botao
+from scripts.inventario import Inventario
 from scripts.spriteManager import SpriteManager
 from scripts.spritesheet import SpriteSheet
 from scripts.mapaManager import MapaManager
@@ -80,16 +81,45 @@ class CenaManager():
 class Overworld():
 	def __init__(self, cenaManager):
 		self.spriteManager = cenaManager.spriteManager
+		self.inventario = Inventario(self.spriteManager)
 		self.spriteManager.load("spritesheets/ui")
 		self.deltaTime = 0
 		self.camera = Camera()
+		
 		self.jogador = Jogador(5, 5, self)
 		self.display = Surface((256, 144)).convert()
 		self.mapaDisplay = Surface((DISPLAY_TAMANHO)).convert()
 		self.mapaManager = MapaManager(self.camera)
-		self.cor = (62, 39, 49)		
-
-	def update(self, cenaManager):		
+		self.cor = (62, 39, 49)
+		self.botoes = {}
+		self.setUpBotoes()
+	
+	def setUpBotoes(self):
+		botoes = self.botoes
+		botoes["cima"] = Botao(16, DISPLAY_TAMANHO_REAL[1]-56, lambda: self.jogador.mover(0, -1, self), True)
+		botoes["cima"].imgNormal = (4, 0, 2, 2)
+		botoes["cima"].imgPressionando = (4, 2, 2, 2)
+		
+		botoes["baixo"] = Botao(16, DISPLAY_TAMANHO_REAL[1]-24, lambda: self.jogador.mover(0, 1, self), True)
+		botoes["baixo"].imgNormal = (6, 0, 2, 2)
+		botoes["baixo"].imgPressionando = (6, 2, 2, 2)
+		
+		botoes["esquerda"] = Botao(0, DISPLAY_TAMANHO_REAL[1]-40, lambda: self.jogador.mover(-1, 0, self), True)
+		botoes["esquerda"].imgNormal = (0, 0, 2, 2)
+		botoes["esquerda"].imgPressionando = (0, 2, 2, 2)
+		
+		botoes["direita"] = Botao(32, DISPLAY_TAMANHO_REAL[1]-40, lambda: self.jogador.mover(1, 0, self), True)
+		botoes["direita"].imgNormal = (2, 0, 2, 2)
+		botoes["direita"].imgPressionando = (2, 2, 2, 2)
+		
+		botoes["inventario"] = Botao(208, 8, self.inventario.toggle)
+		botoes["inventario"].imgNormal = (8, 0, 2, 2)
+		botoes["inventario"].imgPressionando = (8, 2, 2, 2)
+		
+	def update(self, cenaManager):
+		for botao in self.botoes:
+			self.botoes[botao].update()
+			
 		self.jogador.update(self)
 		self.camera.moverPara(self.jogador.xMovendo, self.jogador.yMovendo, self.mapaManager.mapa)
 	
@@ -104,28 +134,23 @@ class Overworld():
 		self.jogador.show(self.mapaDisplay, self.camera)
 		self.display.blit(self.mapaDisplay, (48, 0))
 		self.showUi()
+		self.inventario.show(self.display)
 	
 	def showUi(self):
-		self.jogador.botaoCima.show(self.display)
-		self.jogador.botaoBaixo.show(self.display)
-		self.jogador.botaoDireita.show(self.display)
-		self.jogador.botaoEsquerda.show(self.display)
+		for botao in self.botoes:
+			self.botoes[botao].show(self.display, self.spriteManager)
 
 	def lidarEventos(self, cenaManager):
 		for evento in cenaManager.eventos:			
 			if evento.type in [MOUSEBUTTONDOWN, MOUSEMOTION]:
 				pos = telaParaDisplay(*evento.pos)
-				self.jogador.botaoCima.pressionandoMouse(pos)
-				self.jogador.botaoBaixo.pressionandoMouse(pos)
-				self.jogador.botaoDireita.pressionandoMouse(pos)
-				self.jogador.botaoEsquerda.pressionandoMouse(pos)
+				for botao in self.botoes:
+					self.botoes[botao].pressionandoMouse(pos)
 				
 			elif evento.type==MOUSEBUTTONUP:
 				pos = telaParaDisplay(*evento.pos)
-				self.jogador.botaoCima.tirandoMouse(pos)
-				self.jogador.botaoBaixo.tirandoMouse(pos)
-				self.jogador.botaoDireita.tirandoMouse(pos)
-				self.jogador.botaoEsquerda.tirandoMouse(pos)
+				for botao in self.botoes:
+					self.botoes[botao].tirandoMouse(pos)
 		
 class ESTADOS(Enum):
 	OVERWORLD = 0

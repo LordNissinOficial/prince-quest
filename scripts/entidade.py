@@ -50,8 +50,8 @@ class Entidade():
 				
 			if self.xMovendo==self.x and self.yMovendo==self.y:
 				continuarMovendo = False
-				for index, botao in enumerate([self.botaoEsquerda, self.botaoDireita, self.botaoCima, self.botaoBaixo]):
-					if [[-1, 0], [1, 0], [0, -1], [0, 1]][index]==self.movendo[1] and botao.pressionado:
+				for index, botao in enumerate(["esquerda", "direita", "cima", "baixo"]):
+					if [[-1, 0], [1, 0], [0, -1], [0, 1]][index]==self.movendo[1] and jogo.botoes[botao].pressionado:
 						continuarMovendo = True
 						break
 				

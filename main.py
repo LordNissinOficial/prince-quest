@@ -1,6 +1,7 @@
+from pygame import Rect
 from pygame.font import (init, SysFont)
 from pygame.time import Clock
-from pygame.display import (set_mode, flip)
+from pygame.display import (set_mode, flip, update)
 from pygame.locals import (DOUBLEBUF, FULLSCREEN)
 #import pygame as pg
 from scripts.cenas import CenaManager
@@ -9,7 +10,7 @@ from profilehooks import profile
 #pg.init()
 init()
 
-#@profile()
+#@profile(filename="profile.prof")
 def main():
 	frame = 0
 	flags = DOUBLEBUF|FULLSCREEN
@@ -17,12 +18,12 @@ def main():
 	fonte = SysFont("Calibri", 10)
 	cenaManager = CenaManager()
 	clock = Clock()
-	while cenaManager.rodando:# and frame<240:
+	while cenaManager.rodando: #and frame<240:
 		#frame += 1
 		cenaManager.update()
 		cenaManager.show(tela)
-		tela.blit(fonte.render(str(int(clock.get_fps())), 0, (100, 100, 100)), (40, 40))
-		flip()
+		tela.blit(fonte.render(str(int(clock.get_fps())), 0, (100, 100, 100), (62, 39, 49)), (40, 40))
+		update()
 		cenaManager.jogo.deltaTime = clock.tick(50)/1000
 
 main()

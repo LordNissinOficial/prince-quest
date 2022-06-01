@@ -134,20 +134,20 @@ class MapaManager:
 		return Rect((x, y, self.tileset.tilewidth, self.tileset.tileheight))	
 
 	def show(self, camera):
-		minY = max(int(camera.pos.y/8), 0)
-		maxY = min(int(camera.pos.y/8+camera.altura+1), self.mapa.height)
-		minX = max(int(camera.pos.x/8), 0)
-		maxX = min(int(camera.pos.x/8+camera.largura+1), self.mapa.width)		
+		minY = max(int(camera.y/8), 0)
+		maxY = min(minY+camera.altura+1, self.mapa.height)
+		minX = max(int(camera.x/8), 0)
+		maxX = min(minX+camera.largura+1, self.mapa.width)		
 
-		self.showLayer(0, camera, minX, minY, maxX, maxY)
-		
-	def showLayer(self, layer, camera, minX, minY, maxX, maxY):
+		tiles = self.tiles
+		tileset = self.tileset
+		grid = self.grid
 		
 		for y in range(minY, maxY):
 			for x in range(minX, maxX):
-				self.display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))
-				#self.showGid(layer, camera, x, y)
-				#10**5
+				self.display.blit(tiles[grid[0][y][x]], (x*tileset.tilewidth-camera.x, y*tileset.tileheight-camera.y))
 		
-#	def showGid(self, layer, camera, x, y):		
-#		self.display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.pos.x), y*self.tileset.tileheight-int(camera.pos.y)))
+	#def showLayer(self, layer, camera, minX, minY, maxX, maxY):		
+#		for y in range(minY, maxY):
+#			for x in range(minX, maxX):
+#				self.display.blit(self.tiles[self.grid[layer][y][x]], (x*self.tileset.tilewidth-int(camera.x), y*self.tileset.tileheight-int(camera.y)))
