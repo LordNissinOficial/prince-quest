@@ -11,8 +11,8 @@ class Jogador(Entidade):#pg.sprite.Sprite):
 		Entidade.__init__(self, x, y, self.img.get_width(), self.img.get_height())
 
 	
-	def update(self, jogo):				
-		self.updateMovimento(jogo)
+	def update(self, jogo, deltaTime):				
+		self.updateMovimento(jogo, deltaTime)
 
 	def show(self, display, camera):
 		x = self.xMovendo-camera.x

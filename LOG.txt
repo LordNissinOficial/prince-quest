@@ -82,8 +82,20 @@ dia 7:
 
 tempo trabalhando:
 
-1 hora e 10 minutos
+1 hora e 40 minutos
 
 feito:
 •mockup do inventario.
-•base do inventario
+•base do inventario.
+•tirado botoes da classe do jogador.
+
+dia 8:
+
+tempo programando:
+
+1 hora e 10 minutos
+
+feito:
+•decidido um inventario estilo pokemon.
+•feito mockup do inventario.
+•adicionado fonte.

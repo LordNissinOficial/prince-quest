@@ -18,12 +18,12 @@ def main():
 	fonte = SysFont("Calibri", 10)
 	cenaManager = CenaManager()
 	clock = Clock()
-	while cenaManager.rodando: #and frame<240:
+	while cenaManager.rodando:# and frame<240:
 		#frame += 1
 		cenaManager.update()
 		cenaManager.show(tela)
-		tela.blit(fonte.render(str(int(clock.get_fps())), 0, (100, 100, 100), (62, 39, 49)), (40, 40))
+		tela.blit(fonte.render(str(round(clock.get_fps())), 0, (100, 100, 100), (62, 39, 49)), (40, 40))
 		update()
-		cenaManager.jogo.deltaTime = clock.tick(50)/1000
+		cenaManager.deltaTime = clock.tick(50)/1000
 
 main()

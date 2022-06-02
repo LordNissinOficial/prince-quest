@@ -33,11 +33,11 @@ class Entidade():
 			return True
 		return False
 	
-	def updateMovimento(self, jogo):
+	def updateMovimento(self, jogo, deltaTime):
 		if self.movendo[0]:
 			movendo = True
-			self.xMovendo += self.movendo[1][0]*48*jogo.deltaTime
-			self.yMovendo += self.movendo[1][1]*48*jogo.deltaTime
+			self.xMovendo += self.movendo[1][0]*48*deltaTime
+			self.yMovendo += self.movendo[1][1]*48*deltaTime
 			if self.arrumarPosMovendo():
 				self.movendo = [False, [0, 0]]
 				self.xMovendo = self.x

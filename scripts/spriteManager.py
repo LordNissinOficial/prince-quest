@@ -1,11 +1,24 @@
 from pygame.image import load as loadImage
+from pygame.font import (init, Font)
+
+init()
 
 class SpriteManager():
 	def __init__(self):
 		self.path = "recursos/sprites/"
 		self.spriteAtual = None
+		self.fonte = Font("recursos/alagard.ttf", 16)
+		#self.fonte.set_underline(True)
 		self.sprites = {}
+		self.fontes = {}
 	
+	def underline(bool):
+		self.fonte.set_underline(bool)
+#	def loadFonte(self):
+#		return self.fonte
+#		if filename not in self.fontes:
+#			self.fonte
+		
 	def load(self, filename, rect=None):
 		if filename not in self.sprites:
 			try:
