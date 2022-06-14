@@ -76,7 +76,7 @@ tempo trabalhando:
 
 feito:
 
-•codigo optmizado para rodar com um fps de 40 em celulares.
+•codigo optimizado para rodar com um fps de 40 em celulares.
 
 dia 7:
 
@@ -91,7 +91,7 @@ feito:
 
 dia 8:
 
-tempo programando:
+tempo trabalhando:
 
 1 hora e 10 minutos
 
@@ -99,3 +99,17 @@ feito:
 •decidido um inventario estilo pokemon.
 •feito mockup do inventario.
 •adicionado fonte.
+
+dia 9-19:
+
+descanso
+
+dia 20:
+
+tempo trabalhando:
+
+0 hora e 0 minutos
+
+feito:
+
+•mapaManager optimizado para poder rodar 4 fps ate quando o mapa esta movendo.

@@ -5,16 +5,22 @@ from tmx import TileMap
 class MapaManager:
 	def __init__(self, camera):
 		self.camera = camera
-		self.display = Surface(DISPLAY_TAMANHO).convert()
+		self.display = Surface((DISPLAY_TAMANHO[0]+8, DISPLAY_TAMANHO[1]+8)).convert()
 		self.mapa = None
 		self.colisoes = None
+		self.a = not False
 		self.grid = None
 		self.tileset = None
 		self.tilesDic = None
 		self.funcoes = None
 		self.tiles = None
-		self.novoMapa("mapa-mundi")
-		self.show(camera)
+		self.minYAntigo = None
+		self.maxYAntigo = None
+		self.minXAntigo = None
+		self.maxXAntigo = None
+		self.novoMapa("mapaGrande")
+		#self.novoMapa("mapa-mundi")
+		self.updateDisplay(camera)
 	
 #	def __getstate__(self):
 #		state = self.__dict__.copy()
@@ -58,7 +64,7 @@ class MapaManager:
 		self.tiles = self.tilesetPraLista(tilesetImg, self.tileset.tilewidth, self.tileset.tileheight)
 		del tilesetImg
 		self.carregarMapa()
-		self.show(self.camera)
+		self.updateDisplay(self.camera)
 	
 	def emWarp(self, entidadeRect):
 		for funcao in self.funcoes:
@@ -112,17 +118,20 @@ class MapaManager:
 	def layerPraGrid(self, layer):
 		tiles = layer.tiles
 		grid = []
+		gridAppend = grid.append
 		l = []
+		lAppend = l.append
 		y, x = 0, 0
 		
 		for tile in tiles:
-			l.append(tile.gid)
+			lAppend(tile.gid)
 			x += 1
 			if x==self.mapa.width:
 				x = 0
 				y += 1
-				grid.append(l)
+				gridAppend(l)
 				l = []
+				lAppend = l.append
 		if layer.name!="colisoes":
 			self.grid.append(grid)
 		else:
@@ -133,20 +142,61 @@ class MapaManager:
 		y = pos[1]*self.tileset.tileheight
 		return Rect((x, y, self.tileset.tilewidth, self.tileset.tileheight))	
 
-	def show(self, camera):
-		minY = max(int(camera.y/8), 0)
-		maxY = min(minY+camera.altura+1, self.mapa.height)
-		minX = max(int(camera.x/8), 0)
-		maxX = min(minX+camera.largura+1, self.mapa.width)		
+	def updateDisplay(self, camera):
+		self.minY = max(int(camera.y/8), 0)
+		self.maxY = min(self.minY+camera.altura+1, self.mapa.height)
+		self.minX = max(int(camera.x/8), 0)
+		self.maxX = min(self.minX+camera.largura+1, self.mapa.width)		
+#		if self.a>0:
+#			self.a -=1
+#		else:
+#			return
+#		
+#		if self.minX==self.minXAntigo or self.maxX==self.maxXAntigo or self.minY==self.minYAntigo or self.maxY==self.maxYAntigo:
+#			if self.a:
+#				self.a = False
+#			else:
+#				return
+		#self.a = True
+#			xDiff = camera.xAntigo-camera.x
+#			xDiff = int(xDiff/max(1, xDiff))
+#			yDiff = camera.yAntigo-camera.y
+#			yDiff = int(yDiff/max(1, yDiff))
+#			if xDiff!=0 or yDiff!=0:
+#				#self.a = True
+#				self.display.scroll(xDiff, yDiff)
+#			else:
+#				self.a = True
+#			return 
+#		
+#		if not self.a:
+#			return
+#		else:#if self.a:
+#			self.a = False
+#			#return
+#		#self.a = False
+		self.minYAntigo = self.minY
+		self.maxYAntigo = self.maxY
+		self.minXAntigo = self.minX
+		self.maxXAntigo = self.maxX
 
 		tiles = self.tiles
 		tileset = self.tileset
 		grid = self.grid
 		
-		for y in range(minY, maxY):
-			for x in range(minX, maxX):
-				self.display.blit(tiles[grid[0][y][x]], (x*tileset.tilewidth-camera.x, y*tileset.tileheight-camera.y))
-		
+		for y in range(self.minY, self.maxY):
+			for x in range(self.minX, self.maxX):
+				self.display.blit(tiles[grid[0][y][x]], (x*tileset.tilewidth-(camera.x//8*8), y*tileset.tileheight-(camera.y//8*8)))
+				#self.display.blit(tiles[grid[0][y][x]], (x*tileset.tilewidth-camera.x, y*tileset.tileheight-camera.y))
+	
+	def show(self, display):
+		xDiff = self.camera.x%8
+		yDiff = self.camera.y%8
+#			xDiff = self.camera.xAntigo-self.camera.x
+#			xDiff = int(xDiff/max(1, xDiff))
+#			yDiff = self.camera.yAntigo-self.camera.y
+#			yDiff = int(yDiff/max(1, yDiff))
+		display.blit(self.display, (-xDiff, -yDiff))
 	#def showLayer(self, layer, camera, minX, minY, maxX, maxY):		
 #		for y in range(minY, maxY):
 #			for x in range(minX, maxX):

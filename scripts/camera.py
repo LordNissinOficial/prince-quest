@@ -30,4 +30,8 @@ class Camera:
 #		self.posAntiga.y = max(0, self.posAntiga.y)
 	
 	def mudouPosicao(self):
-		return self.xAntigo!=self.x or self.yAntigo!=self.y
+		x = int(self.x/8)
+		xAntigo = int(self.xAntigo/8)
+		y = int(self.y/8)
+		yAntigo = int(self.yAntigo/8)
+		return xAntigo!=x or yAntigo!=y#self.xAntigo!=self.x or self.yAntigo!=self.y

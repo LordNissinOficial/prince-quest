@@ -23,6 +23,7 @@ def main():
 		cenaManager.update()
 		cenaManager.show(tela)
 		tela.blit(fonte.render(str(round(clock.get_fps())), 0, (100, 100, 100), (62, 39, 49)), (40, 40))
+		#tela.blit(fonte.render(str(cenaManager.spriteManager.load.cache_info()), 0, (100, 100, 100), (62, 39, 49)), (40, 50))
 		update()
 		cenaManager.deltaTime = clock.tick(50)/1000
 

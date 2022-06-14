@@ -19,6 +19,7 @@ class Inventario:
 		self.slots[0] = "antidoto"
 		#self.slots = [[None for x in range(10)] for y in range(9)]
 		self.textoCor = (62, 39, 49)
+		self.fundoCor = (115, 62, 57)
 		self.setUpBotoes(cenaManager)
 		
 	def setUpBotoes(self, cenaManager):
@@ -42,11 +43,12 @@ class Inventario:
 		#if not self.aberto:	return
 		self.display.fill(COR_FUNDO)
 		self.display.blit(self.displayMochila, (48, 0))
-		self.display.blit(self.spriteManager.fonte.render("items", 0, (self.textoCor)), (128-self.spriteManager.fonte.size("items")[0]//2, 8))
+		self.display.blit(self.spriteManager.fonte.render("items chave", 0, self.textoCor, self.fundoCor), (128-self.spriteManager.fonte.size("items chave")[0]//2, 4))
 		for index, slot in enumerate(self.slots[0:6]):
-			#line(self.display, self.textoCor, (64, 38+16*index), (190, 38+16*index))
-			if not slot: continue
-			self.display.blit(self.spriteManager.fonte.render(slot, 0, self.textoCor), (64, 38-13+16*index))
+			
+			if slot:
+				self.display.blit(self.spriteManager.fonte.render(slot, 0, self.textoCor, self.fundoCor), (64, 38-13+16*index))
+			line(self.display, self.textoCor, (64, 38+16*index), (190, 38+16*index))
 #		img = self.spriteManager.load("spritesheets/ui", (14, 0, 2, 2))
 #		for y in range(9):
 #			for x in range(10):

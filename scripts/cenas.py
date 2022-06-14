@@ -132,9 +132,11 @@ class Overworld():
 	def show(self):
 		self.display.fill(COR_FUNDO)
 		if self.camera.mudouPosicao()==True:
-			self.mapaManager.show(self.camera)
-		
-		self.mapaDisplay.blit(self.mapaManager.display, (0, 0))
+			self.mapaManager.updateDisplay(self.camera)
+#		else:
+#			self.mapaManager.a = 8
+		self.mapaManager.show(self.mapaDisplay)
+		#self.mapaDisplay.blit(self.mapaManager.display, (0, 0))
 		self.jogador.show(self.mapaDisplay, self.camera)
 		self.display.blit(self.mapaDisplay, (48, 0))
 		self.showUi()

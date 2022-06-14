@@ -1,5 +1,6 @@
 from pygame.image import load as loadImage
 from pygame.font import (init, Font)
+from functools import cache
 
 init()
 
@@ -18,7 +19,7 @@ class SpriteManager():
 #		return self.fonte
 #		if filename not in self.fontes:
 #			self.fonte
-		
+	#@cache
 	def load(self, filename, rect=None):
 		if filename not in self.sprites:
 			try:
